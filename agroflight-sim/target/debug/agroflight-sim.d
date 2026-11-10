@@ -1,0 +1,1 @@
+/home/drfox/workspace/agroflight-sim/agroflight-sim/target/debug/agroflight-sim: /home/drfox/workspace/agroflight-sim/agroflight-sim/src/drone.rs /home/drfox/workspace/agroflight-sim/agroflight-sim/src/field.rs /home/drfox/workspace/agroflight-sim/agroflight-sim/src/main.rs /home/drfox/workspace/agroflight-sim/agroflight-sim/src/mission.rs
