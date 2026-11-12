@@ -1,10 +1,12 @@
 mod drone;
 mod field;
 mod mission;
+mod geometry;
 
 use drone::Drone;
 use field::Field;
 use mission::{Mission, MissionType};
+use geometry::Point;
 
 fn main() {
 
@@ -17,8 +19,9 @@ fn main() {
 
     let field = Field {
         name: String::from("Field-001"),
-        width_m: 500.0,
-        height_m: 200.0,
+        width_m: 100.0,
+        height_m: 50.0,
+        origin: Point {x: 10.0, y: 20.0},
     };
 
     let mission = Mission{
@@ -45,5 +48,30 @@ fn main() {
     println!("\nMISSION");
     println!("Name: {}", mission.name);
     println!("Altitude: {}", mission.target_altitude_m);
+
+    let start = Point{x: 0.0, y: 0.0};
+    let end = Point{x: 3.0, y: 4.0};
+
+    println!("\nGEOMETRY TEST");
+    println!("Distance {} m", start.distance_to(&end));
+
+    println!("\nFIELD GEOMETRY");
+
+    let corners = field.corners();
+    
+    for (index, point) in corners.iter().enumerate() {
+        println!(
+            "Corner {}: ({}, {})",
+            index + 1,
+            point.x,
+            point.y
+        );
+    }
+
+    let test_point = Point {x:50.0, y:40.0};
+    println!(
+        "Point (50, 40) inside field: {}",
+        field.contains(&test_point)
+    )
     
 }
