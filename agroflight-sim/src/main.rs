@@ -2,11 +2,13 @@ mod drone;
 mod field;
 mod mission;
 mod geometry;
+mod coverage;
 
 use drone::Drone;
 use field::Field;
 use mission::{Mission, MissionType};
 use geometry::Point;
+use coverage::CoveragePlan;
 
 fn main() {
 
@@ -72,6 +74,27 @@ fn main() {
     println!(
         "Point (50, 40) inside field: {}",
         field.contains(&test_point)
-    )
+    );
+
+
+    let coverage_width_m = 10.0;
+    let coverage_plan = CoveragePlan::generate(&field, coverage_width_m);
+
+    println!("\nCOVERAGE PLAN");
+    println!("Coverage width: {} m", coverage_width_m);
+    println!("Number of lanes: {}", coverage_plan.lanes.len());
+
+    for (index, (start, end)) in coverage_plan.lanes.iter().enumerate() {
+        println!(
+            "Lane {}: ({}, {}) -> ({}, {})",
+            index + 1,
+            start.x,
+            start.y,
+            end.x,
+            end.y,
+        );
+    }
+
+    
     
 }
