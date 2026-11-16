@@ -1,17 +1,18 @@
+mod coverage;
 mod drone;
 mod field;
-mod mission;
 mod geometry;
-mod coverage;
+mod mission;
+mod trajectory;
 
+use coverage::CoveragePlan;
 use drone::Drone;
 use field::Field;
-use mission::{Mission, MissionType};
 use geometry::Point;
-use coverage::CoveragePlan;
+use mission::{Mission, MissionType};
+use trajectory::Trajectory;
 
 fn main() {
-
     let drone = Drone {
         model: String::from("AgroQuad-X1"),
         mass_kg: 25.0,
@@ -23,16 +24,15 @@ fn main() {
         name: String::from("Field-001"),
         width_m: 100.0,
         height_m: 50.0,
-        origin: Point {x: 10.0, y: 20.0},
+        origin: Point { x: 10.0, y: 20.0 },
     };
 
-    let mission = Mission{
+    let mission = Mission {
         name: String::from("Mission-001"),
         mission_type: MissionType::Spraying,
         target_altitude_m: 30.0,
-        
     };
-    
+
     println!("AGROFLIGHT SIM");
     println!("==============");
 
@@ -51,8 +51,8 @@ fn main() {
     println!("Name: {}", mission.name);
     println!("Altitude: {}", mission.target_altitude_m);
 
-    let start = Point{x: 0.0, y: 0.0};
-    let end = Point{x: 3.0, y: 4.0};
+    let start = Point { x: 0.0, y: 0.0 };
+    let end = Point { x: 3.0, y: 4.0 };
 
     println!("\nGEOMETRY TEST");
     println!("Distance {} m", start.distance_to(&end));
@@ -60,22 +60,16 @@ fn main() {
     println!("\nFIELD GEOMETRY");
 
     let corners = field.corners();
-    
+
     for (index, point) in corners.iter().enumerate() {
-        println!(
-            "Corner {}: ({}, {})",
-            index + 1,
-            point.x,
-            point.y
-        );
+        println!("Corner {}: ({}, {})", index + 1, point.x, point.y);
     }
 
-    let test_point = Point {x:50.0, y:40.0};
+    let test_point = Point { x: 50.0, y: 40.0 };
     println!(
         "Point (50, 40) inside field: {}",
         field.contains(&test_point)
     );
-
 
     let coverage_width_m = 10.0;
     let coverage_plan = CoveragePlan::generate(&field, coverage_width_m);
@@ -95,6 +89,15 @@ fn main() {
         );
     }
 
-    
-    
+    let trajectory = Trajectory::from_coverage_plan(&coverage_plan);
+
+    println!("\nFLIGHT TRAJECTORY");
+    println!("Number of waypoints: {}", trajectory.waypoints.len());
+    for (index, point) in trajectory.waypoints.iter().enumerate() {
+        println!("waypoint {}: {:.2}, {:.2}", index + 1, point.x, point.y);
+    }
+    println!(
+        "Total flight distance: {:.2} m",
+        trajectory.total_distance()
+    );
 }

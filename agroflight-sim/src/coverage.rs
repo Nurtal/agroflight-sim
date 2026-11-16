@@ -12,8 +12,14 @@ impl CoveragePlan {
 
         for i in 0..number_of_lanes {
             let x = field.origin.x + (i as f64 + 0.5) * coverage_width_m;
-            let start = Point {x, y: field.origin.y};
-            let end = Point {x, y: field.origin.y + field.height_m};
+            let start = Point {
+                x,
+                y: field.origin.y,
+            };
+            let end = Point {
+                x,
+                y: field.origin.y + field.height_m,
+            };
 
             lanes.push((start, end));
         }
@@ -26,11 +32,11 @@ mod tests {
     use super::*;
 
     fn create_test_field() -> Field {
-        Field { 
+        Field {
             name: String::from("Test field"),
             width_m: 100.0,
             height_m: 50.0,
-            origin: Point { x:10.0, y:20.0 },
+            origin: Point { x: 10.0, y: 20.0 },
         }
     }
 
@@ -52,7 +58,6 @@ mod tests {
         assert_eq!(start.y, 20.0);
         assert_eq!(end.x, 15.0);
         assert_eq!(end.y, 70.0);
-        
     }
 
     #[test]
@@ -61,11 +66,11 @@ mod tests {
             name: String::from("Odd field"),
             width_m: 105.0,
             height_m: 50.0,
-            origin: Point { x: 0.0, y: 0.0},
+            origin: Point { x: 0.0, y: 0.0 },
         };
 
         let plan = CoveragePlan::generate(&field, 10.0);
-        
+
         assert_eq!(plan.lanes.len(), 11);
     }
 }

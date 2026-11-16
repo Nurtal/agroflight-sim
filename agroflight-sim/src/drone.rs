@@ -1,5 +1,3 @@
-
-
 pub struct Drone {
     pub model: String,
     pub mass_kg: f64,

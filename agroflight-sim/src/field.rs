@@ -17,12 +17,20 @@ impl Field {
         let y = self.origin.y;
 
         [
-            Point {x, y},
-            Point {x: x + self.width_m, y},
-            Point {x: x + self.width_m, y: y + self.height_m},
-            Point {x, y: y + self.height_m},
+            Point { x, y },
+            Point {
+                x: x + self.width_m,
+                y,
+            },
+            Point {
+                x: x + self.width_m,
+                y: y + self.height_m,
+            },
+            Point {
+                x,
+                y: y + self.height_m,
+            },
         ]
-        
     }
 
     pub fn contains(&self, point: &Point) -> bool {
@@ -33,7 +41,6 @@ impl Field {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -41,9 +48,9 @@ mod tests {
     fn create_test_field() -> Field {
         Field {
             name: String::from("Test field"),
-            width_m:100.0,
+            width_m: 100.0,
             height_m: 50.0,
-            origin: Point { x: 10.0, y: 20.0},
+            origin: Point { x: 10.0, y: 20.0 },
         }
     }
 
@@ -52,7 +59,6 @@ mod tests {
         let field = create_test_field();
 
         assert_eq!(field.area_hectares(), 0.5);
-        
     }
 
     #[test]
@@ -70,7 +76,7 @@ mod tests {
     #[test]
     fn detects_point_inside_field() {
         let field = create_test_field();
-        let point = Point { x:50.0, y: 40.0};
+        let point = Point { x: 50.0, y: 40.0 };
 
         assert!(field.contains(&point));
     }
@@ -78,7 +84,7 @@ mod tests {
     #[test]
     fn detect_point_outside_field() {
         let field = create_test_field();
-        let point = Point {x: 150.0, y: 40.0};
+        let point = Point { x: 150.0, y: 40.0 };
 
         assert!(!field.contains(&point));
     }
