@@ -3,4 +3,5 @@ pub struct Drone {
     pub mass_kg: f64,
     pub battery_capacity_ah: f64,
     pub max_speed_mps: f64,
+    pub cruise_speed_mps: f64,
 }

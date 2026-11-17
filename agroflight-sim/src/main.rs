@@ -2,6 +2,7 @@ mod coverage;
 mod drone;
 mod field;
 mod geometry;
+mod metrics;
 mod mission;
 mod trajectory;
 
@@ -9,6 +10,7 @@ use coverage::CoveragePlan;
 use drone::Drone;
 use field::Field;
 use geometry::Point;
+use metrics::MissionMetrics;
 use mission::{Mission, MissionType};
 use trajectory::Trajectory;
 
@@ -17,7 +19,8 @@ fn main() {
         model: String::from("AgroQuad-X1"),
         mass_kg: 25.0,
         battery_capacity_ah: 20.0,
-        max_speed_mps: 5.0,
+        max_speed_mps: 10.0,
+        cruise_speed_mps: 5.0,
     };
 
     let field = Field {
@@ -100,4 +103,11 @@ fn main() {
         "Total flight distance: {:.2} m",
         trajectory.total_distance()
     );
+
+    let metrics = MissionMetrics::calculate(&drone, &trajectory);
+
+    println!("\nMISSION PERFORMANCE");
+    println!("Distance: {:.2} m", metrics.total_distance_m);
+    println!("Duration: {:.2} s", metrics.flight_duration_s);
+    println!("Average Speed: {:.2}", metrics.average_speed_mps);
 }
