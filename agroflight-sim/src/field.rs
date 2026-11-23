@@ -1,3 +1,4 @@
+use crate::errors::SimulationError;
 use crate::geometry::Point;
 
 pub struct Field {
@@ -38,6 +39,18 @@ impl Field {
             && point.x <= self.origin.x + self.width_m
             && point.y >= self.origin.y
             && point.y <= self.origin.y + self.height_m
+    }
+
+    pub fn validate(&self) -> Result<(), SimulationError> {
+        if self.width_m <= 0.0 || self.height_m <= 0.0 {
+            return Err(SimulationError::InvalidFieldDimensions);
+        }
+
+        if !self.width_m.is_finite() || !self.height_m.is_finite() {
+            return Err(SimulationError::InvalidFieldDimensions);
+        }
+
+        Ok(())
     }
 }
 

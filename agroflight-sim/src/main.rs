@@ -1,5 +1,6 @@
 mod coverage;
 mod drone;
+mod errors;
 mod field;
 mod geometry;
 mod metrics;
@@ -75,7 +76,8 @@ fn main() {
     );
 
     let coverage_width_m = 10.0;
-    let coverage_plan = CoveragePlan::generate(&field, coverage_width_m);
+    let coverage_plan =
+        CoveragePlan::generate(&field, coverage_width_m).expect("Fail to generate coverage Plan");
 
     println!("\nCOVERAGE PLAN");
     println!("Coverage width: {} m", coverage_width_m);
@@ -104,7 +106,8 @@ fn main() {
         trajectory.total_distance()
     );
 
-    let metrics = MissionMetrics::calculate(&drone, &trajectory);
+    let metrics = MissionMetrics::calculate(&drone, &trajectory)
+        .expect("Failed to calculate mission metrics");
 
     println!("\nMISSION PERFORMANCE");
     println!("Distance: {:.2} m", metrics.total_distance_m);

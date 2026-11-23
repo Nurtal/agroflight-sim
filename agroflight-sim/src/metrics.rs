@@ -1,4 +1,5 @@
 use crate::drone::Drone;
+use crate::errors::SimulationError;
 use crate::trajectory::Trajectory;
 
 pub struct MissionMetrics {
@@ -8,18 +9,27 @@ pub struct MissionMetrics {
 }
 
 impl MissionMetrics {
-    pub fn calculate(drone: &Drone, trajectory: &Trajectory) -> Self {
+    pub fn calculate(drone: &Drone, trajectory: &Trajectory) -> Result<Self, SimulationError> {
+        drone.validate()?;
+        if trajectory.waypoints.len() < 2 {
+            return Err(SimulationError::InvalidTrajectory);
+        }
+
         let total_distance_m = trajectory.total_distance();
+
+        if !total_distance_m.is_finite() || total_distance_m <= 0.0 {
+            return Err(SimulationError::InvalidTrajectory);
+        }
 
         let flight_duration_s = total_distance_m / drone.cruise_speed_mps;
 
         let average_speed_mps = total_distance_m / flight_duration_s;
 
-        Self {
+        Ok(Self {
             total_distance_m,
             flight_duration_s,
             average_speed_mps,
-        }
+        })
     }
 }
 
@@ -42,7 +52,7 @@ mod tests {
             waypoints: vec![Point { x: 0.0, y: 0.0 }, Point { x: 0.0, y: 100.0 }],
         };
 
-        let metrics = MissionMetrics::calculate(&drone, &trajectory);
+        let metrics = MissionMetrics::calculate(&drone, &trajectory).unwrap();
 
         assert_eq!(metrics.total_distance_m, 100.0);
         assert_eq!(metrics.flight_duration_s, 20.0);

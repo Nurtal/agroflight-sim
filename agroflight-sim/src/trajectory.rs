@@ -50,7 +50,7 @@ mod tests {
             origin: Point { x: 0.0, y: 0.0 },
         };
 
-        CoveragePlan::generate(&field, 10.0)
+        CoveragePlan::generate(&field, 10.0).unwrap()
     }
 
     #[test]

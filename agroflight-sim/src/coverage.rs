@@ -1,3 +1,4 @@
+use crate::errors::SimulationError;
 use crate::field::Field;
 use crate::geometry::Point;
 
@@ -6,12 +7,18 @@ pub struct CoveragePlan {
 }
 
 impl CoveragePlan {
-    pub fn generate(field: &Field, coverage_width_m: f64) -> Self {
+    pub fn generate(field: &Field, coverage_width_m: f64) -> Result<Self, SimulationError> {
+        field.validate()?;
+        if !coverage_width_m.is_finite() || coverage_width_m <= 0.0 {
+            return Err(SimulationError::InvalidCoverageWidth);
+        }
+
         let number_of_lanes = (field.width_m / coverage_width_m).ceil() as usize;
         let mut lanes = Vec::new();
+        let lane_spacing_m = field.width_m / number_of_lanes as f64;
 
         for i in 0..number_of_lanes {
-            let x = field.origin.x + (i as f64 + 0.5) * coverage_width_m;
+            let x = field.origin.x + (i as f64 + 0.5) * lane_spacing_m;
             let start = Point {
                 x,
                 y: field.origin.y,
@@ -23,7 +30,7 @@ impl CoveragePlan {
 
             lanes.push((start, end));
         }
-        Self { lanes }
+        Ok(Self { lanes })
     }
 }
 
@@ -43,14 +50,14 @@ mod tests {
     #[test]
     fn generates_correct_number_of_lanes() {
         let field = create_test_field();
-        let plan = CoveragePlan::generate(&field, 10.0);
+        let plan = CoveragePlan::generate(&field, 10.0).unwrap();
         assert_eq!(plan.lanes.len(), 10);
     }
 
     #[test]
     fn generates_lanes_at_correct_positions() {
         let field = create_test_field();
-        let plan = CoveragePlan::generate(&field, 10.0);
+        let plan = CoveragePlan::generate(&field, 10.0).unwrap();
 
         let (start, end) = &plan.lanes[0];
 
@@ -69,7 +76,7 @@ mod tests {
             origin: Point { x: 0.0, y: 0.0 },
         };
 
-        let plan = CoveragePlan::generate(&field, 10.0);
+        let plan = CoveragePlan::generate(&field, 10.0).unwrap();
 
         assert_eq!(plan.lanes.len(), 11);
     }
