@@ -42,8 +42,11 @@ mod tests {
     fn calculates_flight_duration() {
         let drone = Drone {
             model: String::from("Test drone"),
-            mass_kg: 25.0,
+            empty_mass_kg: 25.0,
+            max_payload_kg: 15.0,
+            payload_kg: 10.0,
             battery_capacity_ah: 2.0,
+            battery_voltage_v: 48.0,
             max_speed_mps: 10.0,
             cruise_speed_mps: 5.0,
         };

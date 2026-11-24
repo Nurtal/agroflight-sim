@@ -18,8 +18,11 @@ use trajectory::Trajectory;
 fn main() {
     let drone = Drone {
         model: String::from("AgroQuad-X1"),
-        mass_kg: 25.0,
+        empty_mass_kg: 25.0,
+        max_payload_kg: 15.0,
+        payload_kg: 10.0,
         battery_capacity_ah: 20.0,
+        battery_voltage_v: 48.0,
         max_speed_mps: 10.0,
         cruise_speed_mps: 5.0,
     };
@@ -42,8 +45,12 @@ fn main() {
 
     println!("\nDRONE");
     println!("Model: {}", drone.model);
-    println!("Mass: {}", drone.mass_kg);
+    println!("Empty Mass: {}", drone.empty_mass_kg);
     println!("Battery: {}", drone.battery_capacity_ah);
+    println!("Payload {} kg", drone.payload_kg);
+    println!("Max Payload {} kg", drone.max_payload_kg);
+    println!("Total mass {} kg", drone.total_mass_kg());
+    println!("Battery energy {} Wh", drone.battery_energy_wh());
     println!("Max Speed: {}", drone.max_speed_mps);
 
     println!("\nFIELD");
